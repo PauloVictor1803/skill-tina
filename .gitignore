@@ -1,0 +1,15 @@
+# Ambientes e temporários
+__pycache__/
+*.py[cod]
+*$py.class
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+
+# Credenciais e tokens locais
+mcp_oauth_tokens.json
+credentials.enc
+.env
+.venv/
+env/

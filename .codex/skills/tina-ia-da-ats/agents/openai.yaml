@@ -1,0 +1,5 @@
+interface:
+  display_name: "Base IA Tina ATS"
+  short_description: "Gestão, curadoria e publicação de procedimentos e Few-Shots para a Tina e ERP Resulth ATS"
+  icon_small: "./assets/tina-base-ia.svg"
+  icon_large: "./assets/tina-base-ia.svg"

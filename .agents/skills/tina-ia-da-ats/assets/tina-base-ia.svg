@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Base IA Tina ATS">
+  <defs>
+    <linearGradient id="bg-tina" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0284C7"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="52" fill="url(#bg-tina)"/>
+  <!-- Livro Aberto / Base de Conhecimento -->
+  <path d="M48 80c28-12 56-10 80 8 24-18 52-20 80-8v104c-28-12-56-10-80 8-24-18-52-20-80-8V80Z" fill="none" stroke="#38BDF8" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M128 88v104" stroke="#38BDF8" stroke-width="12" stroke-linecap="round"/>
+  <!-- Brilho / IA -->
+  <circle cx="128" cy="52" r="8" fill="#F59E0B"/>
+  <path d="M128 32v8M128 64v8M108 52h8M140 52h8" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
+</svg>
