@@ -7,7 +7,36 @@
 
 Skill oficial e completa para gerenciar, auditar, enriquecer, validar e publicar a base de conhecimento operacional, procedimentos técnicos (`PROC`), exemplos de atendimento (`FEWSHOT`), mídias homologadas e rotinas de inteligência artificial no **Tina Console** para o ERP **Resulth ATS** (versões Windows, Checkout e Web).
 
-A skill integra validação técnica assistida por IA, mineração de linguagem real com **Gemini Notebook (NotebookLM)**, sincronização bidirecional em tempo real com o **Google Sheets**, suíte de testes de regressão automatizados (**EVALS**) e um conjunto robusto de **30 Dificuldades Operacionais Homologadas**.
+A skill integra validação técnica assistida por IA, mineração de linguagem real com **Gemini Notebook (NotebookLM)**, registro no **Google Sheets**, testes automatizados (**EVALS**) e orientações operacionais. A entrada principal é modular: carregue somente as referências necessárias à tarefa.
+
+## Skills incluídas e dependências
+
+As pastas `.agents/skills/` e `.codex/skills/` contêm o mesmo conjunto:
+
+| Skill | Quando usar |
+| --- | --- |
+| `tina-ia-da-ats` | Conhecimento, governança, auditoria e evals; entrada principal e 28 módulos de referência |
+| `tina-gestao-melhorias` | Consultar, assumir, revisar e concluir melhorias e propostas com rastreabilidade |
+| `tina-registro-sheets` | Registrar alterações efetivas, preservar histórico e confirmar o Sheets por releitura |
+| `tina-catalogo-telas-upload` | Manter fichas em `rotinas/telas/`, caminhos por módulo, imagens por estado e envio no padrão correto |
+| `notebooklm-async-queries` | Acompanhar consultas assíncronas e entregar o resultado na sessão de origem |
+| `rotinas-imagens-vinculo-deterministico` | Cruzar páginas e capturas por caminho completo, sem similaridade ou aliases |
+| `delphi-win32-menu-capture` | Orientar captura Win32/Delphi, DPI, identidade de janelas e retomada |
+| `windows-markdown-utf8` | Gravar Markdown sem BOM no PowerShell |
+
+Instale o conjunto para resolver as referências entre skills. Carregar uma skill não autoriza publicar páginas, subir imagens ou alterar configuração de agentes. A governança deste repositório mantém **Paulo Magalhães** como responsável pela autorização das mudanças de configuração.
+
+### Requisitos de ambiente
+
+- Tina Console: MCP autenticado e permissões para as operações solicitadas. Descubra as assinaturas atuais; o catálogo e os exemplos históricos abaixo não substituem a descoberta.
+- NotebookLM: MCP `gemini-notebook-mcp`. Retorno assíncrono automático requer também agendador com entrega à sessão de origem, como `automation` no OpenCode. Sem esse recurso, não prometa retorno automático.
+- Base e Sheets: acesso autorizado à base oficial e à planilha. `ats.py`, scripts operacionais, credenciais e dados da base **não são distribuídos neste repositório**. Localize o acesso correto na máquina; não recrie a base para suprir um caminho ausente.
+- Captura: o código e os testes `menu-mapper`, citados nas skills, são referências ao ambiente de origem e **não estão incluídos**. Resultados históricos não equivalem a validação no ambiente de quem instalar.
+- O sincronizador de Sheets descrito na skill escreve a partir das fontes locais: **não faz merge bidirecional**. Compare local e remoto antes de sincronizar e confirme Sheets e Excel separadamente.
+
+### Padrão de `rotinas/telas/`
+
+Use `tina-catalogo-telas-upload` para o fluxo completo e o exemplo validado. Uma ficha por rotina preserva o título real da janela; caminhos completos ficam no corpo associados aos módulos comprovados. Cada mídia tem ID estável, chave real do storage, estado e gatilho no YAML, além de callout pesquisável com instrução explícita de `enviar_midia` e o mesmo ID. Estados/abas distintos pertencem às mídias, não a novas fichas. O catálogo complementa os procedimentos e não os substitui.
 
 ---
 
@@ -54,7 +83,7 @@ A skill conecta o agente diretamente ao servidor oficial da ATS (`https://mcp.ce
 | **8. Observabilidade Analítica** | 14 | `analitica_resumo`, `metricas_uso_llm`, `custos_por_modelo`, `tempo_resposta` | Monitoramento de latência, taxa de resolução direta, custos por modelo de LLM e picos de atendimento. |
 | **9. Suíte de Evals** | 8 | `salvar_eval`, `rodar_evals`, `listar_evals`, `ver_rodada_eval`, `comparar_versao_evals` | Bateria automatizada de casos de teste para prevenir regressões de prompt, regras ou conteúdo da base. |
 | **10. Governança e Versões** | 6 | `listar_versoes`, `criar_versao`, `ativar_versao`, `reverter_versao` | Controle de versionamento semântico do prompt do sistema e rollback seguro. |
-| **11. Sincronização Google Sheets** | 6 | `sincronizar_sheets`, `exportar_planilha`, `formatar_grid` | Sincronização bidirecional em tempo real entre a base Markdown e as 7 abas da planilha de governança da ATS. |
+| **11. Registro Google Sheets** | — | Scripts externos da base; consulte `tina-registro-sheets` | Registro nas 7 abas com preservação do histórico e releitura; não presumir ferramentas MCP nem merge bidirecional. |
 
 ---
 
@@ -149,7 +178,7 @@ A skill consolida **30 dificuldades práticas e regras invioláveis** homologada
        ├── Verificação e renovação de token OAuth
        ├── Sincronização em Staging
        ├── Publicação em lote oficial e indexação vetorial no Tina Console
-       └── Sincronização bidirecional com as 7 abas do Google Sheets e Excel local
+        └── Registro nas abas aplicáveis do Google Sheets e verificação separada do Excel
 
 7. Bateria de Testes Automatizados (Evals)
    └── python ats.py evals --rodar
@@ -177,19 +206,24 @@ Os testes podem ser executados por caso individual (`caso_id`) ou em bateria com
 skill-tina/
 ├── .agents/
 │   └── skills/
-│       └── tina-ia-da-ats/
-│           ├── SKILL.md                          # Instrução mestra da skill (árvore de decisão)
-│           ├── agents/
-│           │   └── openai.yaml                   # Metadados e interface do agente
-│           ├── assets/
-│           │   └── tina-base-ia.svg              # Diagramas visuais da arquitetura
-│           └── references/
-│               ├── mcp-tina-console.md           # Documentação completa das 101 ferramentas MCP
-│               ├── curadoria-notebooklm.md       # Roteiro de triangulação nos cadernos oficiais
-│               └── gotchas-e-dificuldades.md     # Guia detalhado das 30 dificuldades operacionais
+│       ├── tina-ia-da-ats/
+│       │   ├── SKILL.md                          # Entrada curta e índice por tarefa
+│       │   ├── agents/openai.yaml
+│       │   ├── assets/tina-base-ia.svg
+│       │   └── references/
+│       │       ├── modulos/                      # 28 módulos carregados sob demanda
+│       │       ├── mcp-tina-console.md
+│       │       ├── curadoria-notebooklm.md
+│       │       └── gotchas-e-dificuldades.md
+│       ├── tina-gestao-melhorias/SKILL.md
+│       ├── tina-registro-sheets/SKILL.md
+│       ├── tina-catalogo-telas-upload/SKILL.md
+│       ├── notebooklm-async-queries/SKILL.md
+│       ├── rotinas-imagens-vinculo-deterministico/SKILL.md
+│       ├── delphi-win32-menu-capture/SKILL.md
+│       └── windows-markdown-utf8/SKILL.md
 ├── .codex/
-│   └── skills/
-│       └── tina-ia-da-ats/                       # Espelho para ambientes Codex
+│   └── skills/                                  # Espelho completo de .agents/skills/
 ├── .gitignore                                    # Proteção de credenciais, logs e temporários
 └── README.md                                     # Este manual completo
 ```
@@ -222,17 +256,19 @@ No diretório de trabalho da base de dados (`Base de dados IA - ats`), o arquivo
 
 ### Google Antigravity IDE
 Para disponibilizar a skill globalmente no Antigravity:
-1. Copie a pasta `tina-ia-da-ats` para o diretório de skills de configuração:
+1. Copie o conjunto de skills para o diretório de configuração, revisando diferenças se já houver versões locais:
    ```cmd
-   xcopy /E /I "skill-tina\.agents\skills\tina-ia-da-ats" "%USERPROFILE%\.gemini\config\skills\tina-ia-da-ats"
+   xcopy /E /I "skill-tina\.agents\skills\*" "%USERPROFILE%\.gemini\config\skills\"
    ```
 2. O assistente carregará a skill automaticamente ao interagir com procedimentos da Tina ou executar o comando `/tina-ia-da-ats`.
 
 ### Codex CLI
 Para disponibilizar no Codex:
 ```cmd
-xcopy /E /I "skill-tina\.codex\skills\tina-ia-da-ats" "%USERPROFILE%\.codex\skills\tina-ia-da-ats"
+xcopy /E /I "skill-tina\.codex\skills\*" "%USERPROFILE%\.codex\skills\"
 ```
+
+Revise conflitos com instalações existentes antes de substituir arquivos. Instalar as skills não instala MCPs, agendadores ou os scripts externos mencionados acima.
 
 ---
 

@@ -1,0 +1,5 @@
+### Dificuldade 31: Falta de Permissao em Configuracoes que Exigem Usuario Mestre
+
+* **O que acontece:** O cliente informa que seu usuário não tem permissão e pede acesso remoto. A transferência imediata pode ser desnecessária quando a configuração deve ser feita por um usuário Mestre ou por outro responsável autorizado do próprio cliente.
+* **Regra de Ouro:** Não transfira apenas por falta de permissão no usuário atual. Explique que a ação exige autenticação por usuário autorizado e pergunte se o cliente ou um responsável pode entrar com o usuário Mestre. Não solicite nem aceite senha pelo chat. Mesmo com acompanhamento remoto, a equipe técnica não deve fazer a alteração usando uma conta própria da ATS; o cliente/responsável precisa autenticar-se. Transfira somente se o cliente confirmar que não tem acesso ao usuário Mestre e não consegue localizar um responsável autorizado, ou se insistir em atendimento humano após a orientação.
+* **Cobertura de regressão:** Mantenha evals para validar tanto a orientação sem transferência imediata quanto a transferência após confirmação de que não há usuário autorizado disponível.
