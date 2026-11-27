@@ -1,0 +1,9 @@
+### Dificuldade 15: Tratamento de Access Violation e Erros Internos de Sistema (Proibição de RAG Forçado)
+* **O que acontecia:** Quando o cliente mandava print de `Access violation at address ... in module 'ResulthBusiness.exe'`, a busca RAG encontrava um artigo aleatório que mencionava *Access violation* causado por cadastro de CFOP (`TS-nfe-access-violation-salvar-cabecalho-cfop`). O modelo supôs cegamente que todo Access Violation em tela de emissão era culpa do CFOP e colocou a cliente leiga para navegar em cadastros tributários profundos (`Cadastro > Produtos > Dados Tributários > CFOP > CFOP`) por 4 turnos seguidos, gerando desgaste e insegurança desnecessários até finalmente transferir.
+* **Causa Técnica Real:** *Access violation* no Delphi/Windows é uma falha de memória (`nil pointer dereference`, ex.: `Read of address 00000014` = objeto nulo com deslocamento de 20 bytes). É um erro estrutural de software, campo nulo inesperado ou bloqueio de antivírus. O cliente comum não sabe o que é isso e não tem obrigação nem autonomia técnica para auditar regras de negócio por trás de exceções de código.
+* **Regra de Ouro Inviolável:**
+  - **Erros do tipo *Access violation*, *Bugcheck*, travamentos de executável e exceções de memória NÃO são resolvidos pelo cliente.**
+  - Trata-se de falha interna de compilação, código ou integridade do banco de dados. O cliente não sabe e não tem capacidade nem obrigação de investigar erros desse tipo.
+  - A Tina NUNCA deve usar o RAG para tentar associar esses erros a cadastros ou mandar o cliente auditar/alterar telas de sistema.
+  - Ao identificar *Access violation* ou *Bugcheck* (seja em texto ou print), **a Tina deve transferir imediatamente para o Suporte Técnico** via ferramenta `transferir_para_humano`, acolhendo o cliente com calma e registrando a mensagem técnica exata no motivo do transbordo.
+
